@@ -32,8 +32,8 @@ export default function Footer() {
             </p>
             <ul className="mt-3 space-y-2 text-sm text-paper/80">
               <li>Kantor Desa Sukorejo, Sambirejo, Sragen</li>
-              <li>0812-0000-0000</li>
-              <li>desasukorejo@sambirejo.sragen.go.id</li>
+              <li>0823-2424-7384</li>
+              <li>desasukorejo09@gmail.com</li>
             </ul>
           </div>
         </div>

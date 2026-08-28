@@ -37,9 +37,7 @@ export default function HomePage() {
                   Ciri Khas
                 </dt>
                 <dd className="mt-1.5 text-sm leading-relaxed text-ink/80">
-                  Sawah berundak (terasering), bukit-bukit kapur dengan
-                  spot pandang, embung desa, serta kerajinan bambu dan
-                  batik tulis warisan turun-temurun.
+                  Sawah berundak (terasering), bukit-bukit kapur, sentra durian, berbagai macam kebudayaan, kerajinan, serta kuliner yang beragam.
                 </dd>
               </div>
               <div className="sm:col-span-2">
@@ -47,7 +45,7 @@ export default function HomePage() {
                   Kondisi Desa Wisata
                 </dt>
                 <dd className="mt-1.5 text-sm leading-relaxed text-ink/80">
-                  Ditetapkan sebagai desa wisata rintisan, Sukorejo
+                  Desa Sukorejo
                   mengandalkan gotong royong warga dalam mengelola
                   destinasi alam, budaya, dan menumbuhkan UMKM lokal
                   sebagai penopang ekonomi wisatawan yang berkunjung.
@@ -75,14 +73,14 @@ export default function HomePage() {
               href="/webgis"
               eyebrow="Halaman Peta"
               title="Peta WebGIS"
-              description="Lihat sebaran titik wisata & UMKM di peta interaktif, lengkap dengan analisis isokron dan multimoda."
+              description="Lihat sebaran titik wisata & UMKM di peta interaktif, lengkap dengan fitur analisis jarak dan waktu tempuh."
               icon={<MapIcon />}
             />
             <FeatureCard
               href="/katalog/wisata"
               eyebrow="Katalog"
               title="Katalog Wisata"
-              description="Jelajahi destinasi wisata alam, air, dan budaya Sukorejo lengkap dengan harga dan jam buka."
+              description="Jelajahi destinasi wisata alam, kuliner, dan budaya Sukorejo lengkap dengan harga dan jam buka."
               icon={<MountainIcon />}
             />
             <FeatureCard

@@ -102,10 +102,10 @@ export default function IsochronePanel({
           <div className="space-y-4">
             <div>
               <p className="text-sm font-semibold text-ink">
-                Seberapa jauh saya bisa pergi dari titik asal?
+                Analisis Isokron
               </p>
               <p className="mt-0.5 text-[11px] text-ink/45">
-                Istilah teknisnya: Analisis Isokron
+                Jangkauan area berdasarkan waktu tempuh 
               </p>
             </div>
 
@@ -181,10 +181,10 @@ export default function IsochronePanel({
           <div className="space-y-4">
             <div>
               <p className="text-sm font-semibold text-ink">
-                Naik apa paling cepat ke tujuan ini?
+                Analisis Multimoda
               </p>
               <p className="mt-0.5 text-[11px] text-ink/45">
-                Istilah teknisnya: Analisis Multimoda
+                *Perbandingan waktu tempuh berdasarkan transportasi
               </p>
             </div>
 
