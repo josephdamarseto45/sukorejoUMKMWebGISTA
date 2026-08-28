@@ -35,10 +35,9 @@ const originIcon = pinIcon("origin");
 // titik pusat + zoom tetap yang bisa saja meleset dari cakupan sebenarnya.
 const VILLAGE_BOUNDS = L.geoJSON(villageBoundary).getBounds();
 
-// Basemap yang tersedia. OpenTopoMap dipakai untuk mode "Terrain" karena
-// gratis, tanpa perlu API key tambahan (beda provider dari OpenRouteService
-// yang sudah dipakai untuk isokron/rute), dan menampilkan kontur/relief
-// wilayah — cocok untuk desa berbukit seperti Sukorejo.
+// Basemap yang tersedia. Esri World Imagery dipakai untuk mode "Satelit"
+// (gaya Google Earth) karena gratis, tanpa perlu API key tambahan (beda
+// provider dari OpenRouteService yang sudah dipakai untuk isokron/rute).
 const BASEMAPS = {
   standard: {
     label: "Standar",
@@ -46,11 +45,11 @@ const BASEMAPS = {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   },
-  terrain: {
-    label: "Terrain",
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  satellite: {
+    label: "Satelit",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution:
-      'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+      "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
   }
 };
 
