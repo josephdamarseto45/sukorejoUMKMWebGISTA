@@ -25,7 +25,7 @@ export default async function KatalogWisataPage() {
             Wisata Desa Sukorejo
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/70">
-            Dari punggung bukit hingga tepi embung — setiap destinasi
+            Dari punggung bukit hingga sentra durian — setiap destinasi
             terhubung langsung ke Peta WebGIS untuk melihat rute dan
             estimasi waktu tempuh.
           </p>

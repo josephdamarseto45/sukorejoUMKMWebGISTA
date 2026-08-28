@@ -25,7 +25,7 @@ export default async function KatalogUmkmPage() {
             UMKM Warga Sukorejo
           </h1>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-paper/70">
-            Kuliner, kerajinan, hingga penginapan warga — kunjungi
+            Kuliner, kerajinan, hingga kebudayaan — kunjungi
             langsung lewat rute yang dihitung di Peta WebGIS.
           </p>
         </div>
