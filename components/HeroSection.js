@@ -8,14 +8,14 @@ export default function HeroSection() {
           Kec. Sambirejo · Kab. Sragen · Jawa Tengah
         </p>
         <h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] text-paper sm:text-5xl md:text-6xl">
-          Desa Wisata Sukorejo,
+          DEWOREJO,
           <br />
-          <span className="italic text-gold">berundak dari sawah ke usaha warga.</span>
+          <span className="italic text-gold">Desa Wisata Sukorejo.</span>
         </h1>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-paper/75 md:text-lg">
-          Dari puncak bukit ke embung desa, dari warung pecel ke sanggar
-          batik — jelajahi ragam wisata dan UMKM Sukorejo lewat satu peta
-          interaktif, lengkap dengan hitungan jarak dan waktu tempuh.
+          Desa Sukorejo merupakan salah satu desa di Kabupaten Sragen yang kaya akan potensi UMKM dan destinasi wisata. Beragam usaha mikro, kecil, dan menengah tumbuh dan berkembang sebagai penggerak utama perekonomian lokal. Selain itu, desa ini juga menawarkan berbagai objek wisata yang menarik dan menyenangkan, menjadikannya memiliki daya tarik ekonomi dan wisata yang menjanjikan.
+
+
         </p>
         <div className="mt-9 flex flex-wrap gap-3">
           <a
