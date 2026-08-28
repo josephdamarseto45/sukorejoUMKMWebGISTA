@@ -102,10 +102,10 @@ export default function IsochronePanel({
           <div className="space-y-4">
             <div>
               <p className="text-sm font-semibold text-ink">
-                Analisis Isokron
+                Seberapa jauh saya bisa pergi dari titik asal?
               </p>
               <p className="mt-0.5 text-[11px] text-ink/45">
-                Jangkauan area berdasarkan waktu tempuh 
+                Istilah teknisnya: Analisis Isokron
               </p>
             </div>
 
@@ -176,15 +176,21 @@ export default function IsochronePanel({
               <LegendSwatch color="#8B4A2B" opacity={0.3} label="Sedang" />
               <LegendSwatch color="#8B4A2B" opacity={0.12} label="Terjauh" />
             </div>
+
+            <p className="rounded-lg bg-ink/5 p-2.5 text-[11px] leading-relaxed text-ink/50">
+              Catatan: batas wilayah pada peta ini adalah estimasi. Untuk
+              waktu tempuh yang presisi ke satu lokasi tertentu, gunakan tab
+              &ldquo;Bandingkan Transportasi&rdquo;.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
             <div>
               <p className="text-sm font-semibold text-ink">
-                Analisis Multimoda
+                Naik apa paling cepat ke tujuan ini?
               </p>
               <p className="mt-0.5 text-[11px] text-ink/45">
-                *Perbandingan waktu tempuh berdasarkan transportasi
+                Istilah teknisnya: Analisis Multimoda
               </p>
             </div>
 

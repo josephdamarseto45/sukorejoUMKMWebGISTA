@@ -44,7 +44,16 @@ export async function POST(request) {
         body: JSON.stringify({
           locations: [[lng, lat]],
           range: ranges,
-          range_type: "time"
+          range_type: "time",
+          // smoothing: 0 -> poligon mengikuti jaringan jalan riil seketat
+          // mungkin (tanpa penghalusan bentuk), supaya batas area yang
+          // digambar lebih mendekati jangkauan sebenarnya dan lebih
+          // konsisten dengan hasil Analisis Multimoda (Directions API).
+          smoothing: 0,
+          // location_type: "start" (default ORS) memastikan titik asal
+          // dihitung sebagai titik keberangkatan, sama seperti origin pada
+          // Analisis Multimoda, bukan titik kedatangan (destination_search).
+          location_type: "start"
         })
       }
     );
