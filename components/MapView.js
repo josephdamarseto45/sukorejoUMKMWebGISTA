@@ -35,6 +35,48 @@ const originIcon = pinIcon("origin");
 // titik pusat + zoom tetap yang bisa saja meleset dari cakupan sebenarnya.
 const VILLAGE_BOUNDS = L.geoJSON(villageBoundary).getBounds();
 
+// Basemap yang tersedia. OpenTopoMap dipakai untuk mode "Terrain" karena
+// gratis, tanpa perlu API key tambahan (beda provider dari OpenRouteService
+// yang sudah dipakai untuk isokron/rute), dan menampilkan kontur/relief
+// wilayah — cocok untuk desa berbukit seperti Sukorejo.
+const BASEMAPS = {
+  standard: {
+    label: "Standar",
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  },
+  terrain: {
+    label: "Terrain",
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution:
+      'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  }
+};
+
+// Tombol kecil untuk berpindah basemap, ditempatkan di pojok kanan atas
+// peta (di luar <MapContainer> supaya tidak ikut menangkap klik/gesture
+// peta di baliknya).
+function BasemapSwitcher({ basemap, onChange }) {
+  return (
+    <div className="absolute right-3 top-3 z-[1000] flex overflow-hidden rounded-full border border-ink/10 bg-white/95 shadow-lg backdrop-blur">
+      {Object.entries(BASEMAPS).map(([key, b]) => (
+        <button
+          key={key}
+          onClick={() => onChange(key)}
+          className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
+            basemap === key
+              ? "bg-forest text-paper"
+              : "text-ink/60 hover:bg-forest/10"
+          }`}
+        >
+          {b.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function ClickHandler({ active, onPick }) {
   useMapEvents({
     click(e) {
@@ -116,9 +158,11 @@ export default function MapView({
   distances
 }) {
   const [scrollZoomHint, setScrollZoomHint] = useState(false);
+  const [basemap, setBasemap] = useState("standard");
 
   return (
     <div className="relative h-full w-full">
+      <BasemapSwitcher basemap={basemap} onChange={setBasemap} />
       <MapContainer
         bounds={VILLAGE_BOUNDS}
         boundsOptions={{ padding: [24, 24] }}
@@ -127,8 +171,9 @@ export default function MapView({
         style={{ cursor: pickingOrigin ? "crosshair" : undefined }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          key={basemap}
+          attribution={BASEMAPS[basemap].attribution}
+          url={BASEMAPS[basemap].url}
         />
 
         <ScrollZoomGate onChange={(active) => setScrollZoomHint(!active)} />
