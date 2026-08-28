@@ -194,17 +194,22 @@ export default function MapView({
           peta. `key` disertakan supaya react-leaflet me-remount layer
           ini setiap kali pickingOrigin berubah (opsi `interactive` pada
           Leaflet hanya berlaku saat layer dibuat, tidak bisa diubah
-          langsung di layer yang sudah ada). */}
+          langsung di layer yang sudah ada).
+          Warna garis mengikuti basemap: hijau tua (#2f4a3c) di atas peta
+          Standar sudah cukup kontras, tapi warna gelap yang sama nyaris
+          tak terlihat di citra Satelit karena berbaur dengan vegetasi/
+          bayangan — jadi dipakai warna emas (gold) saat mode Satelit
+          aktif supaya garis batas tetap jelas terlihat. */}
       <GeoJSON
-        key={`boundary-${pickingOrigin ? "picking" : "idle"}`}
+        key={`boundary-${pickingOrigin ? "picking" : "idle"}-${basemap}`}
         data={villageBoundary}
         interactive={!pickingOrigin}
         style={{
-          color: "#2f4a3c",
-          weight: 2,
+          color: basemap === "satellite" ? "#E0BE6E" : "#2f4a3c",
+          weight: basemap === "satellite" ? 3 : 2,
           dashArray: "6 4",
-          fillColor: "#2f4a3c",
-          fillOpacity: 0.03
+          fillColor: basemap === "satellite" ? "#E0BE6E" : "#2f4a3c",
+          fillOpacity: basemap === "satellite" ? 0.06 : 0.03
         }}
         onEachFeature={(feature, layer) => {
           const p = feature.properties;
