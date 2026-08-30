@@ -35,47 +35,6 @@ const originIcon = pinIcon("origin");
 // titik pusat + zoom tetap yang bisa saja meleset dari cakupan sebenarnya.
 const VILLAGE_BOUNDS = L.geoJSON(villageBoundary).getBounds();
 
-// Basemap yang tersedia. Esri World Imagery dipakai untuk mode "Satelit"
-// (gaya Google Earth) karena gratis, tanpa perlu API key tambahan (beda
-// provider dari OpenRouteService yang sudah dipakai untuk isokron/rute).
-const BASEMAPS = {
-  standard: {
-    label: "Standar",
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  },
-  satellite: {
-    label: "Satelit",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution:
-      "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community"
-  }
-};
-
-// Tombol kecil untuk berpindah basemap, ditempatkan di pojok kanan atas
-// peta (di luar <MapContainer> supaya tidak ikut menangkap klik/gesture
-// peta di baliknya).
-function BasemapSwitcher({ basemap, onChange }) {
-  return (
-    <div className="absolute right-3 top-3 z-[1000] flex overflow-hidden rounded-full border border-ink/10 bg-white/95 shadow-lg backdrop-blur">
-      {Object.entries(BASEMAPS).map(([key, b]) => (
-        <button
-          key={key}
-          onClick={() => onChange(key)}
-          className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
-            basemap === key
-              ? "bg-forest text-paper"
-              : "text-ink/60 hover:bg-forest/10"
-          }`}
-        >
-          {b.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 function ClickHandler({ active, onPick }) {
   useMapEvents({
     click(e) {
@@ -152,16 +111,15 @@ export default function MapView({
   onPickOrigin,
   selectedId,
   onSelectLocation,
+  onOpenDetail,
   isochroneGeoJSON,
   routeLayers,
   distances
 }) {
   const [scrollZoomHint, setScrollZoomHint] = useState(false);
-  const [basemap, setBasemap] = useState("standard");
 
   return (
     <div className="relative h-full w-full">
-      <BasemapSwitcher basemap={basemap} onChange={setBasemap} />
       <MapContainer
         bounds={VILLAGE_BOUNDS}
         boundsOptions={{ padding: [24, 24] }}
@@ -170,9 +128,8 @@ export default function MapView({
         style={{ cursor: pickingOrigin ? "crosshair" : undefined }}
       >
         <TileLayer
-          key={basemap}
-          attribution={BASEMAPS[basemap].attribution}
-          url={BASEMAPS[basemap].url}
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
         <ScrollZoomGate onChange={(active) => setScrollZoomHint(!active)} />
@@ -194,22 +151,17 @@ export default function MapView({
           peta. `key` disertakan supaya react-leaflet me-remount layer
           ini setiap kali pickingOrigin berubah (opsi `interactive` pada
           Leaflet hanya berlaku saat layer dibuat, tidak bisa diubah
-          langsung di layer yang sudah ada).
-          Warna garis mengikuti basemap: hijau tua (#2f4a3c) di atas peta
-          Standar sudah cukup kontras, tapi warna gelap yang sama nyaris
-          tak terlihat di citra Satelit karena berbaur dengan vegetasi/
-          bayangan — jadi dipakai warna emas (gold) saat mode Satelit
-          aktif supaya garis batas tetap jelas terlihat. */}
+          langsung di layer yang sudah ada). */}
       <GeoJSON
-        key={`boundary-${pickingOrigin ? "picking" : "idle"}-${basemap}`}
+        key={`boundary-${pickingOrigin ? "picking" : "idle"}`}
         data={villageBoundary}
         interactive={!pickingOrigin}
         style={{
-          color: basemap === "satellite" ? "#E0BE6E" : "#2f4a3c",
-          weight: basemap === "satellite" ? 3 : 2,
+          color: "#2f4a3c",
+          weight: 2,
           dashArray: "6 4",
-          fillColor: basemap === "satellite" ? "#E0BE6E" : "#2f4a3c",
-          fillOpacity: basemap === "satellite" ? 0.06 : 0.03
+          fillColor: "#2f4a3c",
+          fillOpacity: 0.03
         }}
         onEachFeature={(feature, layer) => {
           const p = feature.properties;
@@ -295,9 +247,25 @@ export default function MapView({
                   {loc.nama}
                 </p>
                 <p className="mt-0.5 text-xs text-ink/60">{loc.kategori}</p>
-                <p className="mt-1.5 text-xs leading-relaxed text-ink/75">
-                  {loc.deskripsi}
-                </p>
+                {loc.deskripsi && (
+                  <>
+                    {/* Deskripsi dipotong maks. 3 baris (line-clamp) supaya
+                        popup tidak memanjang mengikuti panjang deskripsi.
+                        Deskripsi lengkap dibuka lewat modal yang sama
+                        dengan halaman katalog (CatalogFocusModal), biar
+                        tampilannya konsisten di seluruh situs. */}
+                    <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-ink/75">
+                      {loc.deskripsi}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => onOpenDetail(loc)}
+                      className="mt-0.5 text-[11px] font-semibold text-river underline-offset-2 hover:underline"
+                    >
+                      Baca selengkapnya
+                    </button>
+                  </>
+                )}
                 {eta && (
                   <p className="mt-1.5 text-xs font-semibold text-river">
                     📍 {formatDistance(eta.distance)} dari titik asal

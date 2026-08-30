@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import SearchBar from "@/components/SearchBar";
 import ListSidebar from "@/components/ListSidebar";
 import IsochronePanel from "@/components/IsochronePanel";
+import CatalogFocusModal from "@/components/CatalogFocusModal";
 import { haversineDistance, isPointInBoundary } from "@/lib/geo";
 import { villageBoundary } from "@/data/villageBoundary";
 import { useLiveLocations } from "@/lib/useLiveLocations";
@@ -39,6 +40,10 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
   const [selected, setSelected] = useState(
     () => locations.find((l) => l.id === initialSelectedId) || null
   );
+  // Lokasi yang sedang dibuka detail lengkapnya (modal deskripsi penuh,
+  // dipicu tombol "Baca selengkapnya" di popup marker peta) — pakai modal
+  // yang sama dengan halaman katalog supaya tampilannya konsisten.
+  const [detailItem, setDetailItem] = useState(null);
 
   // Jika halaman diakses dari kartu katalog (?id=...), fokuskan peta &
   // panel multimoda ke lokasi tersebut begitu data siap.
@@ -362,11 +367,14 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
           onPickOrigin={handlePickOrigin}
           selectedId={selected?.id}
           onSelectLocation={setSelected}
+          onOpenDetail={setDetailItem}
           isochroneGeoJSON={isochroneGeoJSON}
           routeLayers={routeLayers}
           distances={origin ? distances : null}
         />
       </div>
+
+      <CatalogFocusModal item={detailItem} onClose={() => setDetailItem(null)} />
 
       {/* ---------- Kanan: panel analisis ---------- */}
       <aside className="flex min-h-0 flex-col border-l border-ink/10 bg-paper p-3">
