@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -94,13 +94,27 @@ function FlyToOrigin({ origin }) {
   return null;
 }
 
-function FlyToSelected({ selectedId, locations }) {
+// Terbang ke lokasi terpilih DAN buka popup-nya — dipakai supaya klik nama
+// lokasi di daftar sisi kiri (ListSidebar) langsung menampilkan popup
+// deskripsi marker itu di peta, bukan cuma menggeser peta ke sana saja.
+// Klik marker-nya langsung di peta sudah otomatis membuka popup (perilaku
+// bawaan react-leaflet), efek ini menambahkan perilaku yang sama untuk
+// jalur "pilih dari daftar". `markerRefs` berisi instance Leaflet Marker
+// per id lokasi (lihat pengisian ref di render Marker di bawah).
+function FlyToSelected({ selectedId, listFocusToken, locations, markerRefs }) {
   const map = useMap();
   useEffect(() => {
     const loc = locations.find((l) => l.id === selectedId);
-    if (loc) map.flyTo([loc.lat, loc.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    if (!loc) return;
+    map.flyTo([loc.lat, loc.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    markerRefs.current[selectedId]?.openPopup();
+    // `listFocusToken` sengaja ikut jadi dependency (meski tidak dipakai
+    // nilainya di dalam effect) — supaya effect ini tetap jalan ulang
+    // setiap kali lokasi yang SAMA diklik lagi dari daftar sisi kiri
+    // (mis. setelah popup-nya sempat ditutup manual), bukan hanya saat
+    // `selectedId` benar-benar berubah ke lokasi lain.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId]);
+  }, [selectedId, listFocusToken]);
   return null;
 }
 
@@ -110,6 +124,7 @@ export default function MapView({
   pickingOrigin,
   onPickOrigin,
   selectedId,
+  listFocusToken,
   onSelectLocation,
   onOpenDetail,
   isochroneGeoJSON,
@@ -117,6 +132,7 @@ export default function MapView({
   distances
 }) {
   const [scrollZoomHint, setScrollZoomHint] = useState(false);
+  const markerRefs = useRef({});
 
   return (
     <div className="relative h-full w-full">
@@ -136,7 +152,12 @@ export default function MapView({
 
       <ClickHandler active={pickingOrigin} onPick={onPickOrigin} />
       <FlyToOrigin origin={origin} />
-      <FlyToSelected selectedId={selectedId} locations={locations} />
+      <FlyToSelected
+        selectedId={selectedId}
+        listFocusToken={listFocusToken}
+        locations={locations}
+        markerRefs={markerRefs}
+      />
 
       {/* Batas administrasi Desa Sukorejo (sumber: BIG, lihat
           data/villageBoundary.js) — digambar paling bawah (sebelum layer
@@ -228,6 +249,9 @@ export default function MapView({
             icon={loc.jenis === "wisata" ? wisataIcon : umkmIcon}
             eventHandlers={{ click: () => onSelectLocation(loc) }}
             opacity={selectedId && selectedId !== loc.id ? 0.55 : 1}
+            ref={(el) => {
+              if (el) markerRefs.current[loc.id] = el;
+            }}
           >
             {/* Badge permanen di atas marker (dulu menampilkan waktu, lalu
                 jarak) sudah dihapus atas permintaan — info jarak tetap

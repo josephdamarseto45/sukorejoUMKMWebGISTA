@@ -40,6 +40,14 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
   const [selected, setSelected] = useState(
     () => locations.find((l) => l.id === initialSelectedId) || null
   );
+  // Dinaikkan setiap kali lokasi dipilih lewat daftar sisi kiri (bukan
+  // klik marker langsung di peta) — dipakai sebagai "penanda" agar peta
+  // selalu membuka popup lokasi itu setiap kali diklik dari daftar, bahkan
+  // kalau lokasi yang sama diklik dua kali berturut-turut (mis. setelah
+  // popup-nya sempat ditutup manual). Kalau hanya mengandalkan id lokasi
+  // saja, klik ulang pada lokasi yang sudah aktif tidak akan mengubah
+  // apa pun sehingga popup tidak akan terbuka lagi.
+  const [listFocusToken, setListFocusToken] = useState(0);
   // Lokasi yang sedang dibuka detail lengkapnya (modal deskripsi penuh,
   // dipicu tombol "Baca selengkapnya" di popup marker peta) — pakai modal
   // yang sama dengan halaman katalog supaya tampilannya konsisten.
@@ -350,7 +358,10 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
         <ListSidebar
           items={filtered}
           selectedId={selected?.id}
-          onSelect={setSelected}
+          onSelect={(item) => {
+            setSelected(item);
+            setListFocusToken((t) => t + 1);
+          }}
           distances={origin ? distances : null}
         />
       </aside>
@@ -366,6 +377,7 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
           pickingOrigin={pickingOrigin}
           onPickOrigin={handlePickOrigin}
           selectedId={selected?.id}
+          listFocusToken={listFocusToken}
           onSelectLocation={setSelected}
           onOpenDetail={setDetailItem}
           isochroneGeoJSON={isochroneGeoJSON}
@@ -374,7 +386,7 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
         />
       </div>
 
-      <CatalogFocusModal item={detailItem} onClose={() => setDetailItem(null)} />
+      <CatalogFocusModal item={detailItem} onClose={() => setDetailItem(null)} showMapLink={false} />
 
       {/* ---------- Kanan: panel analisis ---------- */}
       <aside className="flex min-h-0 flex-col border-l border-ink/10 bg-paper p-3">
