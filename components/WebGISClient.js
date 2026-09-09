@@ -9,6 +9,7 @@ import CatalogFocusModal from "@/components/CatalogFocusModal";
 import { haversineDistance, isPointInBoundary } from "@/lib/geo";
 import { villageBoundary } from "@/data/villageBoundary";
 import { useLiveLocations } from "@/lib/useLiveLocations";
+import { ROUTE_COLORS } from "@/lib/travelModes";
 
 // Leaflet butuh `window`, jadi peta hanya dirender di client (ssr: false).
 const MapView = dynamic(() => import("@/components/MapView"), {
@@ -19,13 +20,6 @@ const MapView = dynamic(() => import("@/components/MapView"), {
     </div>
   )
 });
-
-const ROUTE_COLORS = {
-  walking: "#3E6E64",
-  cycling: "#C89B3C",
-  motorcycle: "#8B4A2B",
-  car: "#2F4A3C"
-};
 
 export default function WebGISClient({ locations: initialLocations, initialSelectedId }) {
   // Data selalu diambil ulang langsung dari Supabase begitu peta dibuka di
@@ -74,7 +68,7 @@ export default function WebGISClient({ locations: initialLocations, initialSelec
   const [isoError, setIsoError] = useState(null);
   const isoRequestIdRef = useRef(0);
 
-  const [multiModes, setMultiModes] = useState(["walking", "motorcycle"]);
+  const [multiModes, setMultiModes] = useState(["walking", "car"]);
   const [multiResults, setMultiResults] = useState([]);
   const [multiLoading, setMultiLoading] = useState(false);
   const [multiError, setMultiError] = useState(null);

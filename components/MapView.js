@@ -13,6 +13,7 @@ import {
 import L from "leaflet";
 import { villageBoundary } from "@/data/villageBoundary";
 import { formatDistance } from "@/lib/geo";
+import { MODE_OPTIONS } from "@/lib/travelModes";
 
 // Ikon default Leaflet mengandalkan path asset yang tidak ikut ter-bundle
 // di Next.js, jadi kita ganti dengan divIcon custom (lihat globals.css).
@@ -307,6 +308,38 @@ export default function MapView({
         );
       })}
       </MapContainer>
+
+      {/* Legenda warna rute multimoda — ditampilkan langsung di atas peta
+          (bukan hanya di panel kanan) begitu ada garis rute yang sedang
+          digambar, supaya pengguna langsung tahu garis warna apa mewakili
+          moda transportasi apa saat melihat petanya. Hanya moda yang
+          benar-benar tampil di peta (punya geometri rute) yang dimunculkan
+          di legenda ini. */}
+      {routeLayers?.some((l) => l.geometry) && (
+        <div className="pointer-events-none absolute bottom-3 right-3 z-[1000] rounded-xl bg-white/90 px-3 py-2 shadow-lg backdrop-blur">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-ink/45">
+            Legenda Rute
+          </p>
+          <div className="mt-1.5 flex flex-col gap-1">
+            {routeLayers
+              .filter((l) => l.geometry)
+              .map((l) => {
+                const info = MODE_OPTIONS.find((m) => m.id === l.mode);
+                return (
+                  <div key={l.mode} className="flex items-center gap-1.5">
+                    <span
+                      className="h-1 w-5 rounded-full"
+                      style={{ backgroundColor: l.color }}
+                    />
+                    <span className="text-[11px] text-ink/70">
+                      {info?.icon} {info?.label || l.mode}
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
 
       {/* Hint kecil agar pengguna tahu perlu klik peta dulu untuk
           mengaktifkan zoom via scroll (lihat ScrollZoomGate di atas). */}

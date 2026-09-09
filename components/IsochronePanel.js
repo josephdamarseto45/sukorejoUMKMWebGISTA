@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-const MODE_OPTIONS = [
-  { id: "walking", label: "Jalan Kaki", icon: "🚶" },
-  { id: "cycling", label: "Sepeda", icon: "🚴" },
-  { id: "motorcycle", label: "Motor", icon: "🏍️" },
-  { id: "car", label: "Mobil", icon: "🚗" }
-];
+import { MODE_OPTIONS } from "@/lib/travelModes";
 
 const RANGE_OPTIONS = [
   { seconds: 300, label: "5 mnt" },
@@ -113,7 +107,7 @@ export default function IsochronePanel({
               <p className="text-xs font-semibold uppercase tracking-widest text-ink/45">
                 Moda Transportasi
               </p>
-              <div className="mt-2 grid grid-cols-2 gap-2">
+              <div className="mt-2 grid grid-cols-3 gap-2">
                 {MODE_OPTIONS.map((m) => (
                   <button
                     key={m.id}
@@ -209,7 +203,7 @@ export default function IsochronePanel({
               <p className="text-xs font-semibold uppercase tracking-widest text-ink/45">
                 Bandingkan Moda
               </p>
-              <div className="mt-2 grid grid-cols-2 gap-2">
+              <div className="mt-2 grid grid-cols-3 gap-2">
                 {MODE_OPTIONS.map((m) => (
                   <label
                     key={m.id}
@@ -232,6 +226,30 @@ export default function IsochronePanel({
               </div>
             </div>
 
+            {/* Legenda warna garis rute — warnanya sama persis dengan yang
+                dipakai untuk menggambar tiap garis rute moda di peta
+                (lihat ROUTE_COLORS di lib/travelModes.js & MapView.js),
+                supaya pengguna bisa langsung tahu garis mana yang mewakili
+                moda apa begitu hasil perbandingan tampil di peta. */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-ink/45">
+                Legenda Warna Rute
+              </p>
+              <div className="mt-2 flex flex-wrap gap-3">
+                {MODE_OPTIONS.map((m) => (
+                  <div key={m.id} className="flex items-center gap-1.5">
+                    <span
+                      className="h-1.5 w-5 rounded-full"
+                      style={{ backgroundColor: m.color }}
+                    />
+                    <span className="text-[11px] text-ink/60">
+                      {m.icon} {m.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <button
               onClick={onRunMultimoda}
               disabled={!origin || !destination || multiLoading}
@@ -248,25 +266,32 @@ export default function IsochronePanel({
 
             {multiResults?.length > 0 && (
               <ul className="space-y-2">
-                {multiResults.map((r) => (
-                  <li
-                    key={r.mode}
-                    className="flex items-center justify-between rounded-lg border border-ink/10 px-3 py-2 text-xs"
-                  >
-                    <span className="flex items-center gap-1.5 font-medium text-ink/80">
-                      {MODE_OPTIONS.find((m) => m.id === r.mode)?.icon}
-                      {MODE_OPTIONS.find((m) => m.id === r.mode)?.label}
-                    </span>
-                    {r.error ? (
-                      <span className="text-clay">Gagal dihitung</span>
-                    ) : (
-                      <span className="font-mono text-river">
-                        {(r.distance / 1000).toFixed(1)} km ·{" "}
-                        {Math.round(r.duration / 60)} mnt
+                {multiResults.map((r) => {
+                  const modeInfo = MODE_OPTIONS.find((m) => m.id === r.mode);
+                  return (
+                    <li
+                      key={r.mode}
+                      className="flex items-center justify-between rounded-lg border border-ink/10 px-3 py-2 text-xs"
+                    >
+                      <span className="flex items-center gap-1.5 font-medium text-ink/80">
+                        <span
+                          className="h-1.5 w-4 shrink-0 rounded-full"
+                          style={{ backgroundColor: modeInfo?.color }}
+                        />
+                        {modeInfo?.icon}
+                        {modeInfo?.label}
                       </span>
-                    )}
-                  </li>
-                ))}
+                      {r.error ? (
+                        <span className="text-clay">Gagal dihitung</span>
+                      ) : (
+                        <span className="font-mono text-river">
+                          {(r.distance / 1000).toFixed(1)} km ·{" "}
+                          {Math.round(r.duration / 60)} mnt
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
