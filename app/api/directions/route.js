@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 
+// Hanya 3 moda yang ditampilkan ke pengguna (berjalan/bersepeda/berkendara)
+// — motor dan mobil sengaja digabung jadi satu pilihan "Berkendara" karena
+// ORS tidak punya profil khusus sepeda motor, dianggap mendekati mobil.
 const PROFILE_MAP = {
   walking: "foot-walking",
   cycling: "cycling-regular",
-  motorcycle: "driving-car",
   car: "driving-car"
 };
 

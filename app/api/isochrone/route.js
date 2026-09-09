@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 
-// Profil ORS yang dipetakan dari moda transportasi di UI.
+// Profil ORS yang dipetakan dari moda transportasi di UI. Hanya 3 moda yang
+// ditampilkan ke pengguna (berjalan/bersepeda/berkendara) — motor dan mobil
+// sengaja digabung jadi satu pilihan "Berkendara" karena ORS memang tidak
+// punya profil khusus sepeda motor, dianggap mendekati mobil (driving-car).
 const PROFILE_MAP = {
   walking: "foot-walking",
   cycling: "cycling-regular",
-  motorcycle: "driving-car", // ORS tidak punya profil motor khusus, dianggap mendekati mobil
   car: "driving-car"
 };
 
