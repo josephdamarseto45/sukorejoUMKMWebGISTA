@@ -112,14 +112,14 @@ export default function IsochronePanel({
                   <button
                     key={m.id}
                     onClick={() => onIsoModeChange(m.id)}
-                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-xs font-medium transition-colors ${
+                    className={`flex min-w-0 flex-col items-center gap-1 rounded-lg border px-1.5 py-2 text-center text-[11px] font-medium leading-tight transition-colors ${
                       isoMode === m.id
                         ? "border-forest bg-forest text-paper"
                         : "border-ink/15 text-ink/70 hover:border-forest/40"
                     }`}
                   >
-                    <span>{m.icon}</span>
-                    {m.label}
+                    <span className="text-base leading-none">{m.icon}</span>
+                    <span className="whitespace-normal break-words">{m.label}</span>
                   </button>
                 ))}
               </div>
@@ -207,7 +207,7 @@ export default function IsochronePanel({
                 {MODE_OPTIONS.map((m) => (
                   <label
                     key={m.id}
-                    className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-2 text-xs font-medium transition-colors ${
+                    className={`flex min-w-0 cursor-pointer flex-col items-center gap-1 rounded-lg border px-1.5 py-2 text-center text-[11px] font-medium leading-tight transition-colors ${
                       multiModes.includes(m.id)
                         ? "border-forest bg-forest text-paper"
                         : "border-ink/15 text-ink/70 hover:border-forest/40"
@@ -219,8 +219,8 @@ export default function IsochronePanel({
                       checked={multiModes.includes(m.id)}
                       onChange={() => onToggleMultiMode(m.id)}
                     />
-                    <span>{m.icon}</span>
-                    {m.label}
+                    <span className="text-base leading-none">{m.icon}</span>
+                    <span className="whitespace-normal break-words">{m.label}</span>
                   </label>
                 ))}
               </div>
